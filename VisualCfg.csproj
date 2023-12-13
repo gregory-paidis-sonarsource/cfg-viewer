@@ -6,6 +6,7 @@
   </PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="BlazorMonaco" Version="3.1.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.7.0" />
 		<PackageReference Include="SonarAnalyzer.CFG" Version="9.6.0.74795" />
 	</ItemGroup>

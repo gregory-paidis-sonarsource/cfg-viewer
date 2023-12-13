@@ -6,12 +6,13 @@
 <PageTitle>VisualCFG</PageTitle>
 
 <h1>Second best tab after "Weather"</h1>
+
 <br />
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-6">
             <h4>C#</h4>
-            <textarea @bind="codeSnippet" @oninput="CodeSnippetChanged" id="codeSnippet" class="form-control" rows="10" placeholder="enter c# here"></textarea>
+            <StandaloneCodeEditor Id="my-editor-instance-id" ConstructionOptions="EditorConstructionOptions" OnDidChangeModelContent="EditorDidChangeModelContent" />
         </div>
         <div class="col-lg-6">
             <h4>CFG</h4>
@@ -27,27 +28,15 @@
     </div>
 </div>
 
-@* <textarea id="whatever" @bind="cfgOutput"></textarea> *@
-
 @code {
-    private string codeSnippet = @"
-        class Garbage
-        {
-            public int KillMe()
-            {
-                var x = 1;
-                var y = 2;
-                var z = x + y;
-                return z;
-            }
-        }
-        ";
+    private string codeSnippet;
     private string diagnostics = string.Empty;
+    private StandaloneCodeEditor myEditor;
 
     private async void CodeSnippetChanged(ChangeEventArgs args)
     {
         codeSnippet = args.Value.ToString();
-        Console.WriteLine($"Code snippet changed to:{Environment.NewLine}{codeSnippet}");
+        Console.WriteLine($"Code snippet changed to:{System.Environment.NewLine}{codeSnippet}");
         var either = BigBrain.Compiler.CompileCfg(codeSnippet);
 
         if (either.HasResult)
@@ -58,5 +47,21 @@
         {
             diagnostics = either.Error.ToPrettyString();
         }
+    }
+
+    private StandaloneEditorConstructionOptions EditorConstructionOptions(StandaloneCodeEditor editor)
+    {
+        myEditor = editor;
+        return new StandaloneEditorConstructionOptions
+            {
+                AutomaticLayout = true,
+                Language = "csharp",
+                Value = "int i = 42;"
+            };
+    }
+
+    private async Task EditorDidChangeModelContent(ModelContentChangedEvent eventArgs)
+    {
+        CodeSnippetChanged(new ChangeEventArgs { Value = await myEditor.GetValue() });
     }
 }
