@@ -18,7 +18,7 @@ namespace VisualCfg.Controllers
             }
             else
             {
-                return BadRequest(either.Error.ToError());
+                return BadRequest(either.Error.ToPrettyString());
             }
         }
     }

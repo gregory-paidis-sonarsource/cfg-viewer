@@ -5,30 +5,58 @@
 
 <PageTitle>VisualCFG</PageTitle>
 
-<textarea @bind="codeSnippet" @oninput="HandleValueChanged"></textarea>
-
-<p>Current value: @codeSnippet</p>
-
-<textarea id="whatever" @bind="cfgOutput"></textarea>
-
+<h1>Second best tab after "Weather"</h1>
 <br />
-<br />
-<br />
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-6">
+            <h4>C#</h4>
+            <textarea @bind="codeSnippet" @oninput="CodeSnippetChanged" id="codeSnippet" class="form-control" rows="10" placeholder="enter c# here"></textarea>
+        </div>
+        <div class="col-lg-6">
+            <h4>CFG</h4>
+            @* <textarea class="form-control" rows="10" placeholder="enter text here"></textarea> *@
+            <div id="graphContainer"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <h4>Diagnostics</h4>
+            <textarea @bind="diagnostics" class="form-control" rows="5" placeholder="No diagnostics raised. Good work!"></textarea>
+        </div>
+    </div>
+</div>
 
-<div id="graphContainer"></div>
-
+@* <textarea id="whatever" @bind="cfgOutput"></textarea> *@
 
 @code {
-    private string codeSnippet = string.Empty;
-    private string cfgOutput = string.Empty;
+    private string codeSnippet = @"
+        class Garbage
+        {
+            public int KillMe()
+            {
+                var x = 1;
+                var y = 2;
+                var z = x + y;
+                return z;
+            }
+        }
+        ";
+    private string diagnostics = string.Empty;
 
-    private async void HandleValueChanged(ChangeEventArgs args)
+    private async void CodeSnippetChanged(ChangeEventArgs args)
     {
         codeSnippet = args.Value.ToString();
-        Console.WriteLine($"Text changed to: {codeSnippet}");
+        Console.WriteLine($"Code snippet changed to:{Environment.NewLine}{codeSnippet}");
         var either = BigBrain.Compiler.CompileCfg(codeSnippet);
-        cfgOutput = either.HasResult ? either.Result : either.Error.ToError();
 
-        await JS.InvokeVoidAsync("d3GraphInterop", "graphContainer", cfgOutput);
+        if (either.HasResult)
+        {
+            await JS.InvokeVoidAsync("d3GraphInterop", "graphContainer", either.Result);
+        }
+        else
+        {
+            diagnostics = either.Error.ToPrettyString();
+        }
     }
 }

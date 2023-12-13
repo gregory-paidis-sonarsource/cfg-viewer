@@ -5,7 +5,7 @@ namespace VisualCfg.BigBrain;
 
 public static class DiagnosticExtensions
 {
-    public static string ToError(this List<Diagnostic> diagnostics)
+    public static string ToPrettyString(this List<Diagnostic> diagnostics)
     {
         var sb = new StringBuilder();
         foreach (var diagnostic in diagnostics)
