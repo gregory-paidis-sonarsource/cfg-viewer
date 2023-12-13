@@ -1,0 +1,33 @@
+﻿@page "/cfg"
+@using VisualCfg.BigBrain
+@rendermode InteractiveServer
+
+<PageTitle>VisualCFG</PageTitle>
+
+<textarea @bind="codeSnippet" @oninput="HandleValueChanged"></textarea>
+
+<p>Current value: @codeSnippet</p>
+
+<textarea @bind="cfgOutput"></textarea>
+
+<div id="graph" style="text-align: center;"></div>
+<script>
+
+d3.select("#graph").graphviz()
+    .renderDot('digraph  {a -> b}');
+
+</script>
+
+@code {
+
+    private string codeSnippet = string.Empty;
+    private string cfgOutput = string.Empty;
+
+    private void HandleValueChanged(ChangeEventArgs args)
+    {
+        codeSnippet = args.Value.ToString();
+        Console.WriteLine($"Text changed to: {codeSnippet}");
+        var either = BigBrain.Compiler.CompileCfg(codeSnippet);
+        cfgOutput = either.HasResult ? either.Result : either.Error.ToError();
+    }
+}
