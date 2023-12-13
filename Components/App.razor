@@ -20,7 +20,6 @@
     <script src="https://unpkg.com/d3-graphviz@3.0.5/build/d3-graphviz.js"></script>
     <script>
         window.d3GraphInterop = (elementId, dotContent) => {
-            console.log("dogshit");
             d3.select("#" + elementId).graphviz().renderDot(dotContent);
         };
     </script>

@@ -5,19 +5,16 @@
 
 <PageTitle>VisualCFG</PageTitle>
 
-<h1>Second best tab after "Weather"</h1>
-
-<br />
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-6">
             <h4>C#</h4>
-            <StandaloneCodeEditor Id="my-editor-instance-id" ConstructionOptions="EditorConstructionOptions" OnDidChangeModelContent="EditorDidChangeModelContent" />
+            <StandaloneCodeEditor Id="my-editor-instance-id" ConstructionOptions="EditorConstructionOptions" OnDidChangeModelContent="OnCodeSnippetChanged" />
+            @* <textarea @bind="codeSnippet" @oninput="CodeSnippetChanged" id="codeSnippet" class="form-control half-screen" rows="30" placeholder="enter c# here"></textarea> *@
         </div>
         <div class="col-lg-6">
             <h4>CFG</h4>
-            @* <textarea class="form-control" rows="10" placeholder="enter text here"></textarea> *@
-            <div id="graphContainer"></div>
+            <div id="graphContainer" class="half-screen"></div>
         </div>
     </div>
     <div class="row">
@@ -29,25 +26,8 @@
 </div>
 
 @code {
-    private string codeSnippet;
     private string diagnostics = string.Empty;
     private StandaloneCodeEditor myEditor;
-
-    private async void CodeSnippetChanged(ChangeEventArgs args)
-    {
-        codeSnippet = args.Value.ToString();
-        Console.WriteLine($"Code snippet changed to:{System.Environment.NewLine}{codeSnippet}");
-        var either = BigBrain.Compiler.CompileCfg(codeSnippet);
-
-        if (either.HasResult)
-        {
-            await JS.InvokeVoidAsync("d3GraphInterop", "graphContainer", either.Result);
-        }
-        else
-        {
-            diagnostics = either.Error.ToPrettyString();
-        }
-    }
 
     private StandaloneEditorConstructionOptions EditorConstructionOptions(StandaloneCodeEditor editor)
     {
@@ -56,12 +36,23 @@
             {
                 AutomaticLayout = true,
                 Language = "csharp",
-                Value = "int i = 42;"
+                Value = string.Empty,
             };
     }
 
-    private async Task EditorDidChangeModelContent(ModelContentChangedEvent eventArgs)
+    private async Task OnCodeSnippetChanged()
     {
-        CodeSnippetChanged(new ChangeEventArgs { Value = await myEditor.GetValue() });
+        var codeSnippet = await myEditor.GetValue();
+        var either = BigBrain.Compiler.CompileCfg(codeSnippet);
+
+        if (either.HasResult)
+        {
+            diagnostics = string.Empty;
+            await JS.InvokeVoidAsync("d3GraphInterop", "graphContainer", either.Result);
+        }
+        else
+        {
+            diagnostics = either.Error.ToPrettyString();
+        }
     }
 }

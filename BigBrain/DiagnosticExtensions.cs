@@ -10,7 +10,7 @@ public static class DiagnosticExtensions
         var sb = new StringBuilder();
         foreach (var diagnostic in diagnostics)
         {
-            sb.AppendLine(diagnostic.Id + ": " + diagnostic.GetMessage());
+            sb.AppendLine(diagnostic.Severity + ":" + diagnostic.Id + ": " + diagnostic.GetMessage());
         }
         return sb.ToString();
     }
