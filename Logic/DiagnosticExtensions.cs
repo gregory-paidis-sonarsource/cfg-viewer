@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using System.Text;
 
-namespace VisualCfg.BigBrain;
+namespace VisualCfg.Logic;
 
 public static class DiagnosticExtensions
 {

@@ -1,14 +1,21 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="BlazorMonaco" Version="3.1.0" />
+		<!--Boring WebAssembly stuff-->
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.0" PrivateAssets="all" />
+		<!--Deploy to GH Pages trickery-->
+		<PackageReference Include="PublishSPAforGitHubPages.Build" Version="2.1.1" />
+		<!--Roslyn gaming-->
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.7.0" />
 		<PackageReference Include="SonarAnalyzer.CFG" Version="9.6.0.74795" />
+		<!--VS Code editor-->
+		<PackageReference Include="BlazorMonaco" Version="3.1.0" />
 	</ItemGroup>
 
 </Project>

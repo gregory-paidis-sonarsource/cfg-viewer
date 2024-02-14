@@ -1,24 +1,23 @@
-﻿@page "/cfg"
-@using VisualCfg.BigBrain
-@rendermode InteractiveServer
+﻿@page "/"
 @inject IJSRuntime JS
 
 <PageTitle>VisualCFG</PageTitle>
 
 <div class="container-fluid">
     <div class="row">
-        <div class="col-lg-6">
+        <div class="col-4">
             <h4>C#</h4>
-            <StandaloneCodeEditor Id="my-editor-instance-id" ConstructionOptions="EditorConstructionOptions" OnDidChangeModelContent="OnCodeSnippetChanged" />
-            @* <textarea @bind="codeSnippet" @oninput="CodeSnippetChanged" id="codeSnippet" class="form-control half-screen" rows="30" placeholder="enter c# here"></textarea> *@
+            <StandaloneCodeEditor Id="editor42"
+                                  ConstructionOptions="EditorConstructionOptions"
+                                  OnDidChangeModelContent="OnCodeSnippetChanged" />
         </div>
-        <div class="col-lg-6">
+        <div class="col-8">
             <h4>CFG</h4>
             <div id="graphContainer" class="half-screen"></div>
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-12">
+        <div class="col-12">
             <h4>Diagnostics</h4>
             <textarea @bind="diagnostics" class="form-control" rows="5" placeholder="No diagnostics raised. Good work!"></textarea>
         </div>
@@ -37,14 +36,14 @@
                 AutomaticLayout = true,
                 Language = "csharp",
                 Value = string.Empty,
+                BracketPairColorization = new BracketPairColorizationOptions { Enabled = true, IndependentColorPoolPerBracketType = true },
             };
     }
 
     private async Task OnCodeSnippetChanged()
     {
         var codeSnippet = await myEditor.GetValue();
-        var either = BigBrain.Compiler.CompileCfg(codeSnippet);
-
+        var either = Compiler.CompileCfg(codeSnippet);
         if (either.HasResult)
         {
             diagnostics = string.Empty;
