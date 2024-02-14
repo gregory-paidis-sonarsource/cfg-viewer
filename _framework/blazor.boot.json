@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "VisualCfg",
   "resources": {
-    "hash": "sha256-nd9AK03zSTwDRHGER/oaGW/ghoQ/gKSBMcRfRMf9pKs=",
+    "hash": "sha256-qzv1OhOwOMpT9LcDieKBWcskDa7GWn7/r1jOazeRdwU=",
     "jsModuleNative": {
       "dotnet.native.8.0.2.jcbabumzj1.js": "sha256-d17hNF8qyyHtYNWAn4HNk5NcrcIEgT/9nyGW2BpEqCA="
     },
@@ -81,7 +81,7 @@
       "System.Xml.ReaderWriter.wasm": "sha256-dhbtVifsa1NOmK6xeRRAMq9rjoo7FqhevQ1EZLGYKqk=",
       "System.Xml.XDocument.wasm": "sha256-5UUaysLexycYvGksdOlCKz3r+k9YcpeMsKsH3akv9bQ=",
       "System.Xml.XPath.XDocument.wasm": "sha256-x4354hHa5P+vgtkJ2dA8WAZebIrkqhthxJZ4dCbkIMc=",
-      "VisualCfg.wasm": "sha256-VnFJrwMX0ZBkYrBNU9EYKwsYJ9Xg0qI1fLpLUm+B04k="
+      "VisualCfg.wasm": "sha256-Uf8HWTbX6Yvi8G2nPQrK0WLfidcT1CECotzCzHb96zA="
     },
     "satelliteResources": {
       "cs": {
