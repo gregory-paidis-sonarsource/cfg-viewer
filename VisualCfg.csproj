@@ -6,6 +6,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Martin\netstandard.dll" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<!--Boring WebAssembly stuff-->
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.0" PrivateAssets="all" />
@@ -14,8 +18,12 @@
 		<!--Roslyn gaming-->
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.7.0" />
 		<PackageReference Include="SonarAnalyzer.CFG" Version="9.6.0.74795" />
-		<!--VS Code editor-->
+		<!--VSCode-like editor-->
 		<PackageReference Include="BlazorMonaco" Version="3.1.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Martin\netstandard.dll" />
 	</ItemGroup>
 
 </Project>

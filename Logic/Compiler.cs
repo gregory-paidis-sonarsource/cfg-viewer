@@ -3,7 +3,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using SonarAnalyzer.CFG;
 using SonarAnalyzer.CFG.Roslyn;
-using System.Reflection;
 
 namespace VisualCfg.Logic;
 
@@ -26,31 +25,24 @@ public static class Compiler
         return new(serialized);
     }
 
-    static Compilation Compile(SyntaxTree tree)
+    private static Compilation Compile(SyntaxTree tree)
     {
-        var metadata = GetReferences(
-            [
-                //typeof(object)
-            ]);
-        var compilation = CSharpCompilation.Create("JustGiveMeTheSemanticModel")
+        var metadata = GetReference();
+        var options = new CSharpCompilationOptions(OutputKind.ConsoleApplication, concurrentBuild: false);
+        var compilation = CSharpCompilation.Create("ヽ༼ຈل͜ຈ༽ﾉヽ༼◉ل͜◉༽ﾉヽ༼◔ل͜◔༽ﾉ", options: options)
             .AddReferences(metadata)
             .AddSyntaxTrees(tree);
-
         return compilation;
     }
 
-    static List<MetadataReference> GetReferences(Type[] types)
+    private static MetadataReference GetReference()
     {
-        var res = new List<MetadataReference>();
-        foreach (var assembly in types.Select(x => x.Assembly))
-        {
-            var reference = MetadataReference.CreateFromFile(assembly.Location);
-            res.Add(reference);
-        }
-        return res;
+        var assembly = typeof(Compiler).Assembly;
+        using var stream = assembly.GetManifestResourceStream($"{assembly.GetName().Name}.Martin.netstandard.dll");
+        return MetadataReference.CreateFromStream(stream);
     }
 
-    static SyntaxNode GetNode(SyntaxTree tree)
+    private static SyntaxNode GetNode(SyntaxTree tree)
     {
         var root = tree.GetCompilationUnitRoot() as SyntaxNode;
         var firstMethodFound = root.DescendantNodes().OfType<BaseMethodDeclarationSyntax>().FirstOrDefault();

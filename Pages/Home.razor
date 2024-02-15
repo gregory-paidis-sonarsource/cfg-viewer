@@ -47,6 +47,7 @@
         if (either.HasResult)
         {
             diagnostics = string.Empty;
+            Console.Write(either.Result);
             await JS.InvokeVoidAsync("d3GraphInterop", "graphContainer", either.Result);
         }
         else
