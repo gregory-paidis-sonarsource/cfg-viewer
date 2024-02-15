@@ -98,37 +98,7 @@ a, .btn-link {
         content: var(--blazor-load-percentage-text, "Loading");
     }
 
-code {
-    color: #c02d76;
-}
-
 .monaco-editor-container {
     height: 60vh;
     resize: vertical;
-}
-
-.parent {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(5, 1fr);
-    grid-column-gap: 0px;
-    grid-row-gap: 0px;
-}
-
-.code-snippet {
-    grid-area: 1 / 1 / 5 / 3;
-}
-
-.cfg-result {
-    grid-area: 1 / 3 / 5 / 5;
-}
-
-.diagnostics {
-    grid-area: 5 / 1 / 6 / 5;
-}
-
-svg {
-    /*    height:100%;
-    width:100%;
-*/
 }
