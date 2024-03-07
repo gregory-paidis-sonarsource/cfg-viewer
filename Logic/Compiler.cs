@@ -27,18 +27,23 @@ public static class Compiler
 
     private static Compilation Compile(SyntaxTree tree)
     {
-        var metadata = GetReference();
-        var options = new CSharpCompilationOptions(OutputKind.ConsoleApplication, concurrentBuild: false);
-        var compilation = CSharpCompilation.Create("ヽ༼ຈل͜ຈ༽ﾉヽ༼◉ل͜◉༽ﾉヽ༼◔ل͜◔༽ﾉ", options: options)
-            .AddReferences(metadata)
+        var options = new CSharpCompilationOptions(OutputKind.ConsoleApplication, concurrentBuild: false); // WASM is single threaded, so we can't use concurrent build.
+        var compilation = CSharpCompilation.Create("ヽ༼ຈل͜ຈ༽ﾉヽ༼◉ل͜◉༽ﾉヽ༼◔ل͜◔༽ﾉ", options: options) // BEST assembly name.
+            .AddReferences(BaseReference())
             .AddSyntaxTrees(tree);
         return compilation;
     }
 
-    private static MetadataReference GetReference()
+    private static MetadataReference BaseReference()
     {
         var assembly = typeof(Compiler).Assembly;
-        using var stream = assembly.GetManifestResourceStream($"{assembly.GetName().Name}.Martin.netstandard.dll");
+        // This is a .NET Standard assembly that includes all the basic .NET APIs.
+        // It's used as the target of the compilation so that we can resolve types and basic functionality.
+        // It is found in "C:\Program Files\dotnet\sdk\8.0.100\ref".
+        // The cool part is that it's a reference assembly, so it's quite small.
+        // It needs to be marked as Embeded Resource in the .csproj file.
+        // https://learn.microsoft.com/en-us/dotnet/standard/assembly/reference-assemblies
+        using var stream = assembly.GetManifestResourceStream($"{assembly.GetName().Name}.Assembly.netstandard.dll");
         return MetadataReference.CreateFromStream(stream);
     }
 

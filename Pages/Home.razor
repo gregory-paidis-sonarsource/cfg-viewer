@@ -43,16 +43,17 @@
     private async Task OnCodeSnippetChanged()
     {
         var codeSnippet = await myEditor.GetValue();
-        var either = Compiler.CompileCfg(codeSnippet);
-        if (either.HasResult)
+        var result = Compiler.CompileCfg(codeSnippet);
+        if (result.Success)
         {
             diagnostics = string.Empty;
-            Console.Write(either.Result);
-            await JS.InvokeVoidAsync("d3GraphInterop", "graphContainer", either.Result);
+            Console.Write(result.Result);
+            await JS.InvokeVoidAsync("d3GraphInterop", "graphContainer", result.Result);
+            Console.Write("Donezo!");
         }
         else
         {
-            diagnostics = either.Error.ToPrettyString();
+            diagnostics = result.Error.ToPrettyString();
         }
     }
 }

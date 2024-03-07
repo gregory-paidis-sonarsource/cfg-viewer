@@ -6,11 +6,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="Martin\netstandard.dll" />
+	  <None Remove="Assembly\netstandard.dll" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<!--Boring WebAssembly stuff-->
+		<PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="8.0.0" PrivateAssets="all" />
 		<!--Deploy to GH Pages trickery-->
@@ -23,7 +24,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EmbeddedResource Include="Martin\netstandard.dll" />
+	  <EmbeddedResource Include="Assembly\netstandard.dll" />
 	</ItemGroup>
 
 </Project>

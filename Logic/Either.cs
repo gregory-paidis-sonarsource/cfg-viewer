@@ -9,5 +9,5 @@ public class Either<Left, Right>
 
     public Either(Right error) => Error = error;
 
-    public bool HasResult => Result is not null;
+    public bool Success => Result is not null;
 }
