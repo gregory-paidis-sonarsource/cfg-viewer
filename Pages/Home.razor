@@ -1,4 +1,5 @@
 ﻿@page "/"
+@using Microsoft.CodeAnalysis
 @inject IJSRuntime JS
 
 <PageTitle>VisualCFG</PageTitle>
@@ -12,21 +13,32 @@
                                   OnDidChangeModelContent="OnCodeSnippetChanged" />
         </div>
         <div class="col-8">
-            <h4>CFG</h4>
+            <div class="d-flex align-items-center">
+                <h4>CFG</h4>
+                <select style="margin-inline:50px; max-width:100px" class="form-select" @onchange="OnSelectionChange">
+                    <option value="dll">DLL</option>
+                    <option value="exe">EXE</option>
+                </select>
+            </div>
+
             <div id="graphContainer" class="half-screen"></div>
         </div>
     </div>
     <div class="row">
         <div class="col-12">
             <h4>Diagnostics</h4>
-            <textarea @bind="diagnostics" class="form-control" rows="5" placeholder="No diagnostics raised. Good work!"></textarea>
+            <textarea @bind="diagnostics" class="form-control" rows="5" placeholder="No diagnostics raised. Good work!">
+            </textarea>
         </div>
     </div>
 </div>
 
 @code {
-    private string diagnostics = string.Empty;
     private StandaloneCodeEditor myEditor;
+
+    private OutputKind dllOrExe = OutputKind.DynamicallyLinkedLibrary;
+    private string diagnostics = string.Empty;
+    private string codeSnippet = string.Empty;
 
     private StandaloneEditorConstructionOptions EditorConstructionOptions(StandaloneCodeEditor editor)
     {
@@ -36,14 +48,31 @@
                 AutomaticLayout = true,
                 Language = "csharp",
                 Value = string.Empty,
-                BracketPairColorization = new BracketPairColorizationOptions { Enabled = true, IndependentColorPoolPerBracketType = true },
+                BracketPairColorization = new BracketPairColorizationOptions
+                {
+                    Enabled = true,
+                    IndependentColorPoolPerBracketType = true
+                },
             };
+    }
+
+    private async Task OnSelectionChange(ChangeEventArgs e)
+    {
+        dllOrExe = e.Value.ToString() == "exe"
+            ? OutputKind.ConsoleApplication
+            : OutputKind.DynamicallyLinkedLibrary;
+        await Compile();
     }
 
     private async Task OnCodeSnippetChanged()
     {
-        var codeSnippet = await myEditor.GetValue();
-        var result = Compiler.CompileCfg(codeSnippet);
+        codeSnippet = await myEditor.GetValue();
+        await Compile();
+    }
+
+    private async Task Compile()
+    {
+        var result = Compiler.CompileCfg(codeSnippet, dllOrExe);
         if (result.Success)
         {
             diagnostics = string.Empty;

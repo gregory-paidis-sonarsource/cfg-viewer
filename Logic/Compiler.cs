@@ -8,10 +8,10 @@ namespace VisualCfg.Logic;
 
 public static class Compiler
 {
-    public static Either<string, List<Diagnostic>> CompileCfg(string snippet)
+    public static Either<string, List<Diagnostic>> CompileCfg(string snippet, OutputKind outputKind)
     {
         var tree = CSharpSyntaxTree.ParseText(snippet);
-        var compilation = Compile(tree);
+        var compilation = Compile(tree, outputKind);
         var diagnostics = compilation.GetDiagnostics().Where(x => x.Severity == DiagnosticSeverity.Error).ToList();
         if (diagnostics.Any())
         {
@@ -25,9 +25,9 @@ public static class Compiler
         return new(serialized);
     }
 
-    private static Compilation Compile(SyntaxTree tree)
+    private static Compilation Compile(SyntaxTree tree, OutputKind outputKind)
     {
-        var options = new CSharpCompilationOptions(OutputKind.ConsoleApplication, concurrentBuild: false); // WASM is single threaded, so we can't use concurrent build.
+        var options = new CSharpCompilationOptions(outputKind, concurrentBuild: false); // WASM is single threaded, so we can't use concurrent build.
         var compilation = CSharpCompilation.Create("ヽ༼ຈل͜ຈ༽ﾉヽ༼◉ل͜◉༽ﾉヽ༼◔ل͜◔༽ﾉ", options: options) // BEST assembly name.
             .AddReferences(BaseReference())
             .AddSyntaxTrees(tree);
